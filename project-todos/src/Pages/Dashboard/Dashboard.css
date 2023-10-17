@@ -1,0 +1,18 @@
+.box__todolist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.todolist {
+  display: flex;
+  padding: 0px 20px 0px 20px;
+  height: 100px;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.101);
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}

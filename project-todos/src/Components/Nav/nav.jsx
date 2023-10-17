@@ -127,7 +127,7 @@ export default function Nav() {
               color: "inherit",
               textDecoration: "none",
             }}>
-            LOGO
+            TO DO LIST
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

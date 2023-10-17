@@ -36,13 +36,15 @@ export default function Login() {
         <h1>Login</h1>
         <Input
           sx={{ width: "100%" }}
-          type="text"
+          type="mail"
+          name="mail"
           onChange={handleEmail}
           value={email}
         />
         <Input
           sx={{ width: "100%" }}
           type="password"
+          name="password"
           onChange={handlePass}
           value={pass}
         />

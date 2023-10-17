@@ -1,6 +1,6 @@
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { db } from "../../Firebase";
@@ -8,6 +8,7 @@ import { getDocs } from "firebase/firestore";
 import { useContext } from "react";
 import { authContext } from "../../Auth";
 import uuid from "react-uuid";
+import "./Dashboard.css";
 
 export function Dashboard() {
   const [addATodoList, setaddATodoList] = useState(false);
@@ -52,6 +53,7 @@ export function Dashboard() {
         completed: false,
         viewer: viewer,
       });
+      await docRef;
       console.log("todolist create !");
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -65,10 +67,8 @@ export function Dashboard() {
 
   return (
     <div>
-      <p>Dashboard</p>
-      <button style={{ width: "40px", height: "40px" }} onClick={signingOut}>
-        Déconnexion
-      </button>
+      <h1>Dashboard</h1>
+
       <button onClick={() => setaddATodoList(!addATodoList)}>+</button>
       {addATodoList && (
         <div>
@@ -83,12 +83,17 @@ export function Dashboard() {
           <button onClick={create}>Créer</button>
         </div>
       )}
-      {!loading &&
-        todolists.map((el, index) => (
-          <li component={Link} to={"/dashboard/todo/" + el.ID}>
-            {el.title}
-          </li>
-        ))}
+      <div className="box__todolist">
+        {!loading &&
+          todolists.map((el, index) => (
+            <NavLink
+              key={index}
+              to={"/dashboard/todo/" + el.ID}
+              className="todolist">
+              {el.title}
+            </NavLink>
+          ))}
+      </div>
     </div>
   );
 }
