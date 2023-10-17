@@ -11,10 +11,6 @@ export function Dashboard() {
   return (
     <div>
       <p>Dashboard</p>
-      <button
-        style={{ width: "40px", height: "40px" }}
-        onClick={signingOut}
-      ></button>
     </div>
   );
 }

@@ -44,7 +44,7 @@ export default function Register() {
         />
         <Input
           sx={{ width: "100%" }}
-          type="text"
+          type="password"
           onInput={handlePass}
           value={pass}
         />

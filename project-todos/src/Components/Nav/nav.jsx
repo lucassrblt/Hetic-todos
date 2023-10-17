@@ -12,12 +12,23 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import Input from "@mui/material/Input";
+
+import { signOut } from "firebase/auth";
+import { auth } from "../../Firebase";
+import { useEffect } from "react";
+import { useState } from "react";
+
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  { title: "Profile", link: "/profile" },
+  { title: "Dashboard", link: "/dashboard" },
+  { title: "Logout", link: "/" },
+];
 export default function Nav() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const [titlenav, setTitlenav] = useState("");
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -29,11 +40,18 @@ export default function Nav() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
+  useEffect(() => {
+    const handleCloseUserMenu = (button) => {
+      if (button === "Logout") {
+        signOut(auth);
+        setAnchorElUser(null);
+      } else {
+        setAnchorElUser(null);
+      }
+    };
+    handleCloseUserMenu(titlenav);
+  }, [titlenav]);
+  console.log(titlenav);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -84,7 +102,7 @@ export default function Nav() {
                 display: { xs: "block", md: "none" },
               }}>
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -113,7 +131,6 @@ export default function Nav() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}>
                 {page}
               </Button>
@@ -139,11 +156,12 @@ export default function Nav() {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}>
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              open={Boolean(anchorElUser)}>
+              {settings.map((setting, index) => (
+                <MenuItem
+                  key={index}
+                  onClick={() => setTitlenav(setting.title)}>
+                  <Button>{setting.title}</Button>
                 </MenuItem>
               ))}
             </Menu>

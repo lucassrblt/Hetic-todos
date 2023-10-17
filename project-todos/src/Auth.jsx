@@ -13,10 +13,11 @@ export default function Auth(props) {
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthent(user);
+        console.log(user);
         navigate("/dashboard");
       } else {
         setAuthent(null);
-        // navigate("/login");
+        navigate("/");
       }
     });
     return () => {

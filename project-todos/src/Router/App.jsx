@@ -3,8 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Nav from "../Components/Nav/nav";
 import Register from "../Pages/Register/Register";
 import "../../src/index.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import Auth from "../Auth";
+import Login from "../Pages/Login/Login";
+import { Dashboard } from "../Pages/Dashboard/Dashboard";
+import PrivateRoute from "../Pages/PrivateRoute/PrivateRoute";
 function App() {
   return (
     <BrowserRouter>
@@ -13,7 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
         </Routes>
       </Auth>
     </BrowserRouter>
