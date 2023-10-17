@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
+import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
+import "./login.css";
+import { NavLink } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,33 +31,27 @@ export default function Login() {
   };
 
   return (
-    <div className="form">
-      <form className="input-group">
-        <div className="label-input">
-          <label htmlFor="" className="label">
-            Email
-          </label>
-          <input
-            type="text"
-            className="input required-border"
-            onChange={handleEmail}
-            value={email}
-          />
-          <label htmlFor="" className="label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="input required-border"
-            onChange={handlePass}
-            value={pass}
-          />
-          <button type="submit" onClick={connect}>
-            Login
-          </button>
-          <button onClick={() => signOut(auth)}>logout</button>
-        </div>
-      </form>
+    <div id="Login">
+      <div className="login">
+        <h1>Login</h1>
+        <Input
+          sx={{ width: "100%" }}
+          type="text"
+          onChange={handleEmail}
+          value={email}
+        />
+        <Input
+          sx={{ width: "100%" }}
+          type="password"
+          onChange={handlePass}
+          value={pass}
+        />
+
+        <Button variant="contained" type="submit" onClick={connect}>
+          login
+        </Button>
+        <NavLink to="/">Pas de compte ?</NavLink>
+      </div>
     </div>
   );
 }

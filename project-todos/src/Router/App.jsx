@@ -7,6 +7,8 @@ import Auth from "../Auth";
 import Login from "../Pages/Login/Login";
 import { Dashboard } from "../Pages/Dashboard/Dashboard";
 import { Todo } from "../Pages/Todo/Todo";
+import PrivateRoute from "../Pages/PrivateRoute/PrivateRoute";
+
 function App() {
   return (
     <BrowserRouter>
@@ -15,7 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
           <Route path="/dashboard/todo/:id" element={<Todo />} />
         </Routes>
       </Auth>
