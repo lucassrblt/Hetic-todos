@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../Firebase";
+import { auth, db } from "../../Firebase";
 import "./register.css";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -18,18 +19,27 @@ export default function Register() {
     setPass(e.target.value);
   };
 
-  const register = (e) => {
+  const register = async (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         const user = userCredential.user;
-        use;
-        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
+
+    // Ajoute le user dans une collection firestore
+    try {
+      const docRef = await addDoc(collection(db, "users", title), {
+        email: email,
+        pass: pass,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (

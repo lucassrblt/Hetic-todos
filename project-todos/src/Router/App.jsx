@@ -3,8 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Nav from "../Components/Nav/nav";
 import Register from "../Pages/Register/Register";
 import "../../src/index.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import Auth from "../Auth";
+import Login from "../Pages/Login/Login";
+import { Dashboard } from "../Pages/Dashboard/Dashboard";
+import { Todo } from "../Pages/Todo/Todo";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +16,7 @@ function App() {
           <Route path="/" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/todo/:id" element={<Todo />} />
         </Routes>
       </Auth>
     </BrowserRouter>
