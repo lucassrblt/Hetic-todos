@@ -27,13 +27,33 @@ export default function Login() {
   };
 
   return (
-    <div className="login">
-      <input type="text" onChange={handleEmail} value={email} />
-      <input type="text" onChange={handlePass} value={pass} />
-      <button type="submit" onClick={connect}>
-        login
-      </button>
-      <button onClick={() => signOut(auth)}>logout</button>
+    <div className="form">
+      <form className="input-group">
+        <div className="label-input">
+          <label htmlFor="" className="label">
+            Email
+          </label>
+          <input
+            type="text"
+            className="input required-border"
+            onChange={handleEmail}
+            value={email}
+          />
+          <label htmlFor="" className="label">
+            Password
+          </label>
+          <input
+            type="password"
+            className="input required-border"
+            onChange={handlePass}
+            value={pass}
+          />
+          <button type="submit" onClick={connect}>
+            Login
+          </button>
+          <button onClick={() => signOut(auth)}>logout</button>
+        </div>
+      </form>
     </div>
   );
 }
