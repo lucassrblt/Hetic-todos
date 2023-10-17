@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Firebase";
+import "./register.css";
+import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
+import { NavLink } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -28,12 +32,26 @@ export default function Register() {
   };
 
   return (
-    <div className="login">
-      <input type="text" onChange={handleEmail} value={email} />
-      <input type="text" onChange={handlePass} value={pass} />
-      <button type="submit" onClick={register}>
-        SignIn
-      </button>
+    <div id="register">
+      <div className="login">
+        <h1>Register</h1>
+        <Input
+          sx={{ width: "100%" }}
+          type="text"
+          onInput={handleEmail}
+          value={email}
+        />
+        <Input
+          sx={{ width: "100%" }}
+          type="text"
+          onInput={handlePass}
+          value={pass}
+        />
+        <Button variant="contained" type="submit" onClick={register}>
+          SignIn
+        </Button>
+        <NavLink to="/login">Déja un compte ?</NavLink>
+      </div>
     </div>
   );
 }
