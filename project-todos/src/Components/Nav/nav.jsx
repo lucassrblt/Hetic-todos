@@ -19,7 +19,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import { authContext } from "../../Auth";
 import { useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
   { title: "Profile", link: "/profile" },
@@ -33,6 +33,7 @@ export default function Nav() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+  const navigate = useNavigate();
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -44,8 +45,10 @@ export default function Nav() {
   useEffect(() => {
     if (titlenav === "Logout") {
       signOut(auth);
+      setAnchorElNav(null);
+      navigate("/");
     } else {
-      null;
+      setAnchorElNav(null);
     }
   }, [titlenav]);
 
@@ -167,7 +170,7 @@ export default function Nav() {
               ))}
               {user ? (
                 <MenuItem>
-                  <Button onClick={() => setTitlenav("logout")}>Logout</Button>
+                  <Button onClick={() => setTitlenav("Logout")}>Logout</Button>
                 </MenuItem>
               ) : null}
             </Menu>
