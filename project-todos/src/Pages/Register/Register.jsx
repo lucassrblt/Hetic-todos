@@ -23,6 +23,7 @@ export default function Register() {
     createUserWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         const user = userCredential.user;
+        use;
         console.log(user);
       })
       .catch((error) => {
