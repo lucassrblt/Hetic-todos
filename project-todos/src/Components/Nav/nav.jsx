@@ -15,21 +15,21 @@ import AdbIcon from "@mui/icons-material/Adb";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
-import { useEffect } from "react";
+import { useContext } from "react";
 import { useState } from "react";
+import { authContext } from "../../Auth";
+import { useEffect } from "react";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
   { title: "Profile", link: "/profile" },
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Logout", link: "/" },
 ];
 export default function Nav() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
   const [titlenav, setTitlenav] = useState("");
-
+  const user = useContext(authContext);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -40,18 +40,18 @@ export default function Nav() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
   useEffect(() => {
-    const handleCloseUserMenu = (button) => {
-      if (button === "Logout") {
-        signOut(auth);
-        setAnchorElUser(null);
-      } else {
-        setAnchorElUser(null);
-      }
-    };
-    handleCloseUserMenu(titlenav);
+    if (titlenav === "Logout") {
+      signOut(auth);
+    } else {
+      null;
+    }
   }, [titlenav]);
-  console.log(titlenav);
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -156,14 +156,20 @@ export default function Nav() {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElUser)}>
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}>
               {settings.map((setting, index) => (
                 <MenuItem
                   key={index}
-                  onClick={() => setTitlenav(setting.title)}>
+                  onClick={() => handleCloseUserMenu(setting.title)}>
                   <Button>{setting.title}</Button>
                 </MenuItem>
               ))}
+              {user ? (
+                <MenuItem>
+                  <Button onClick={() => setTitlenav("logout")}>Logout</Button>
+                </MenuItem>
+              ) : null}
             </Menu>
           </Box>
         </Toolbar>
