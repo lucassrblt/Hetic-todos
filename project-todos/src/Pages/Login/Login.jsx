@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
+import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -28,11 +30,23 @@ export default function Login() {
 
   return (
     <div className="login">
-      <input type="text" onChange={handleEmail} value={email} />
-      <input type="text" onChange={handlePass} value={pass} />
-      <button type="submit" onClick={connect}>
+      <Input
+        sx={{ width: "100%" }}
+        type="text"
+        onChange={handleEmail}
+        value={email}
+      />
+      <Input
+        sx={{ width: "100%" }}
+        type="text"
+        onChange={handlePass}
+        value={pass}
+      />
+
+      <Button variant="contained" type="submit" onClick={connect}>
         login
-      </button>
+      </Button>
+
       <button onClick={() => signOut(auth)}>logout</button>
     </div>
   );
