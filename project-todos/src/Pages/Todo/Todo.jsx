@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../Firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, onSnapshot } from "firebase/firestore";
 import { Input } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
@@ -9,61 +9,42 @@ import Checkbox from "@mui/material/Checkbox";
 import uuid from "react-uuid";
 
 export default function Todo() {
-  const [tasks, setTasks] = useState("");
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [TodoList, setTodoList] = useState([]);
   const [inputTodo, setInputTodo] = useState(false);
   const [filter, setFilter] = useState();
   const { id } = useParams();
 
-  const fetchTodos = async () => {
-    const docRef = doc(db, "Todos", id);
-    const docSnap = await getDoc(docRef);
+  const tasksList = collection(db, "Tasks");
 
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
-    }
+  const fetchTask = () => {
+    onSnapshot(tasksList, (snapshot) => {
+      let allTasks = [];
+      snapshot.docs.forEach((doc) => {
+        allTasks.push({ ...doc.data() });
+        // console.log(allTasks[0].todoListId);
+        // console.log(id);
+
+        const tasksToDisplay = allTasks.filter((el) => el.todoListId == id);
+        setTasks(tasksToDisplay);
+        console.log(tasks);
+        setLoading(false);
+      });
+    });
   };
 
   useEffect(() => {
-    fetchTodos();
+    fetchTask();
   }, []);
 
-  const saveTodoList = async () => {
-
-    db.collection("Todos").doc(id).update({
-      inputTodo : {
-          ID: uuid(),
-           title: inputTodo,
-          completed: false,
-          todoId: id,
-      }
-    })
-
-    const 
-    // try {
-    //   const docRef = setDoc(doc(db, "Todos", inputTodo), {
-    //     inputTodo: {
-    //       ID: uuid(),
-    //       title: inputTodo,
-    //       completed: false,
-    //       todoId: id,
-    //     },
-    //   });
-    //   await docRef;
-    //   console.log("task create !");
-    // } catch (e) {
-    //   console.error("Error adding task: ", e);
-    // }
-
-    setTodoList([
-      ...TodoList,
-      { id: TodoList.length + 1, text: inputTodo, completion: false },
-    ]);
+  const saveTodoList = () => {
+    setDoc(doc(db, "Tasks", inputTodo), {
+      todoListId: id,
+      title: inputTodo,
+      completed: false,
+    });
   };
+
   const deleteThing = (item) => {
     setTodoList(TodoList.filter((el) => el.id !== item.id));
   };
@@ -101,13 +82,14 @@ export default function Todo() {
         </div>
       </div>
       <ul className="toDoList">
-        {TodoList.filter((el) => el.completion !== filter).map(
-          (todo, index) => (
+        {/* {!loading && tasks.map((el, index) => <p key={index}>{el.title}</p>)} */}
+        {!loading &&
+          tasks.map((todo, index) => (
             <li key={index}>
               <Button id="button_delete" onClick={() => deleteThing(todo)}>
                 Delete
               </Button>
-              <span>{todo.text}</span>
+              <span>{todo.title}</span>
               <Checkbox
                 sx={{ color: "white" }}
                 id="checkbox_todo"
@@ -115,8 +97,7 @@ export default function Todo() {
                 onClick={() => changeCompletion(todo)}
               />
             </li>
-          )
-        )}
+          ))}
       </ul>
     </div>
   );
