@@ -8,8 +8,9 @@ import { useContext } from "react";
 import { authContext } from "../../Auth";
 import uuid from "react-uuid";
 import "./Dashboard.css";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-export function Dashboard() {
+export default function Dashboard() {
   const [addATodoList, setaddATodoList] = useState(false);
   const [name, setName] = useState("");
   const [viewer, setViewer] = useState("");
@@ -84,23 +85,18 @@ export function Dashboard() {
       <div className="box__todolist">
         {!loading &&
           getTodolists.map((el, index) => (
-            <NavLink
-              key={index}
-              to={"/dashboard/todo/" + el.todoListId}
-              className="todolist"
-            >
-              {el.title}
-            </NavLink>
+            <div style={{ width: "100px", height: "100px" }}>
+              <DeleteIcon />
+              <NavLink
+                key={index}
+                to={"/dashboard/todo/" + el.todoListId}
+                className="todolist"
+              >
+                {el.title}
+              </NavLink>
+            </div>
           ))}
       </div>
-      <p>Dashboard</p>
-      <input type="text" name="title" onChange={handlechange} value={title}/>
-      <input type="text" name="email" onChange={mailchange} />
-      <button onClick={savedb}>Sauvegarder</button>
-      <button
-        style={{ width: "40px", height: "40px" }}
-        onClick={signingOut}
-      ></button>
     </div>
   );
 }
