@@ -6,8 +6,9 @@ import {
   doc,
   setDoc,
   onSnapshot,
-  updateDoc,
   getDocs,
+  deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { Input } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -21,8 +22,6 @@ export default function Todo() {
   const [inputTodo, setInputTodo] = useState(false);
   const [filter, setFilter] = useState("");
   const [addViewer, setAddViewer] = useState("");
-  const [currentTodo, setCurrentTodo] = useState("");
-
   const { id } = useParams();
   const taskId = uuid();
   const tasksList = collection(db, "Tasks");
@@ -33,9 +32,6 @@ export default function Todo() {
       let allTasks = [];
       snapshot.docs.forEach((doc) => {
         allTasks.push({ ...doc.data() });
-        // console.log(allTasks[0].todoListId);
-        // console.log(id);
-
         const tasksToDisplay = allTasks.filter((el) => el.todoListId == id);
         setTasks(tasksToDisplay);
         setLoading(false);
@@ -49,10 +45,10 @@ export default function Todo() {
 
   const saveTodoList = () => {
     setDoc(doc(db, "Tasks", taskId), {
-      id: taskId,
       todoListId: id,
       title: inputTodo,
       completed: false,
+      taskId: taskId,
     });
   };
 
@@ -72,9 +68,21 @@ export default function Todo() {
     });
   };
 
+  const deleteThing = (item) => {
+    const docRef = doc(db, "Tasks", item.taskId);
+
+    console.log(docRef);
+    deleteDoc(docRef);
+    setTasks(tasks.filter((el) => el.taskId !== item.taskid));
+    console.log(tasks);
+  };
+
   const changeCompletion = (item) => {
-    item.completion ? (item.completion = false) : (item.completion = true);
-    console.log(item);
+    const docRef = doc(db, "Tasks", item.taskId);
+    updateDoc(
+      docRef,
+      item.completed ? { completed: false } : { completed: true }
+    );
   };
 
   return (
@@ -107,20 +115,28 @@ export default function Todo() {
       <ul className="toDoList">
         {/* {!loading && tasks.map((el, index) => <p key={index}>{el.title}</p>)} */}
         {!loading &&
-          tasks.map((todo, index) => (
-            <li key={index}>
-              <Button id="button_delete" onClick={() => deleteThing(todo)}>
-                Delete
-              </Button>
-              <span>{todo.title}</span>
-              <Checkbox
-                sx={{ color: "white" }}
-                id="checkbox_todo"
-                type="checkbox"
-                onClick={() => changeCompletion(todo)}
-              />
-            </li>
-          ))}
+          tasks
+            .filter((el) => el.completed !== filter)
+            .map((todo, index) => (
+              <li key={index}>
+                <Button
+                  sx={{ backgroundColor: "red" }}
+                  id="button_delete"
+                  onClick={() => deleteThing(todo)}
+                >
+                  Delete
+                </Button>
+                <span>{todo.title}</span>
+                {console.log(todo.completed)}
+                <Checkbox
+                  sx={{ color: "black" }}
+                  id="checkbox_todo"
+                  type="checkbox"
+                  checked={todo.completed}
+                  onClick={() => changeCompletion(todo)}
+                />
+              </li>
+            ))}
       </ul>
       <div>
         <Input

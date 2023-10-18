@@ -27,10 +27,10 @@ export default function Dashboard() {
   console.log(authent);
   console.log(authent.reloadUserInfo.email);
 
-  const id = uuid();
   const todolists = collection(db, "Todos");
   const tasks = collection(db, "tasks");
   const authents = useContext(authContext);
+  const todoListId = uuid();
 
   // Créez une fonction pour récupérer les données de la collection "todos"
   const fetchTodoList = () => {
