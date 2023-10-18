@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import "./login.css"
+import "./login.css";
+import { NavLink } from "react-router-dom";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -30,6 +32,7 @@ export default function Login() {
 
   return (
     <div className="login">
+      <h1>Connexion</h1>
       <TextField
         sx={{ width: "100%",maxWidth:"500px" }}
         type="email"
@@ -41,19 +44,20 @@ export default function Login() {
       />
       <TextField
         sx={{ width: "100%",maxWidth:"500px" }}
-        type="email"
+        type="password"
         label="Mots de passe"
-        name="email"
+        name="password"
         variant="outlined"
         onChange={handlePass}
         value={pass}
       />
 
-      <Button  sx={{ width: "100%",maxWidth:"500px" }} variant="contained" type="submit" onClick={connect}>
+      <Button   sx={{ width: "100%",maxWidth:"500px",padding: '1em',backgroundColor:'#4440FF' }} variant="contained" type="submit" onClick={connect}>
         login
       </Button>
 
-      {/* <button onClick={() => signOut(auth)}>logout</button> */}
+   
+      <NavLink to="/">Pas de compte ?</NavLink>
     </div>
   );
 }

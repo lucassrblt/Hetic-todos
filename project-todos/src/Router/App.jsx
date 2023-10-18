@@ -5,8 +5,9 @@ import Register from "../Pages/Register/Register";
 import "../../src/index.css";
 import Auth from "../Auth";
 import Login from "../Pages/Login/Login";
-import Dashboard from "../Pages/Dashboard/Dashboard";
-
+import  Dashboard  from "../Pages/Dashboard/Dashboard";
+import Todo from "../Pages/Todo/Todo";
+import PrivateRoute from "../Pages/PrivateRoute/PrivateRoute";
 
 function App() {
   return (
@@ -16,7 +17,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/todo/:id" element={<Todo />} />
+          </Route>
         </Routes>
       </Auth>
     </BrowserRouter>

@@ -1,14 +1,16 @@
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
-import { useNavigate } from "react-router-dom";
-import {doc, setDoc } from "firebase/firestore";
-import {db} from "../../Firebase";
-import { useState } from "react";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { db } from "../../Firebase";
+import { getDocs } from "firebase/firestore";
+import { useContext } from "react";
+import { authContext } from "../../Auth";
+import uuid from "react-uuid";
+import "./Dashboard.css";
 
-const signingOut = () => {
-  signOut(auth);
-  useNavigate("/login");
-};
+
 
 export default function Dashboard() {
   const [title, setTitle] = useState("");
@@ -41,6 +43,34 @@ export default function Dashboard() {
 
   return (
     <div>
+      <h1>Dashboard</h1>
+
+      <button onClick={() => setaddATodoList(!addATodoList)}>+</button>
+      {addATodoList && (
+        <div>
+          <label htmlFor="">Name</label>
+          <input type="text" onChange={(e) => setName(e.target.value)} />
+          <label htmlFor="">Ajouter des colaborateurs</label>
+          <input
+            type="mail"
+            placeholder="admin@admin.com"
+            onChange={(e) => setViewer(e.target.value)}
+          />
+          <button onClick={create}>Créer</button>
+        </div>
+      )}
+      <div className="box__todolist">
+        {!loading &&
+          todolists.map((el, index) => (
+            <NavLink
+              key={index}
+              to={"/dashboard/todo/" + el.ID}
+              className="todolist"
+            >
+              {el.title}
+            </NavLink>
+          ))}
+      </div>
       <p>Dashboard</p>
       <input type="text" name="title" onChange={handlechange} value={title}/>
       <input type="text" name="email" onChange={mailchange} />
