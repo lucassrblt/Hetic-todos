@@ -20,10 +20,10 @@ export default function Dashboard() {
   const authent = useContext(authContext);
   console.log(authent);
 
-  const id = uuid();
   const todolists = collection(db, "Todos");
   const tasks = collection(db, "tasks");
   const authents = useContext(authContext);
+  const todoListId = uuid();
 
   // Créez une fonction pour récupérer les données de la collection "todos"
   const fetchTodoList = () => {
@@ -49,7 +49,7 @@ export default function Dashboard() {
 
   const create = () => {
     setDoc(doc(db, "Todos", name), {
-      todoListId: uuid(),
+      todoListId: todoListId,
       authorId: authent.uid,
       title: name,
       completed: false,
@@ -57,11 +57,6 @@ export default function Dashboard() {
         1: viewer,
       },
     });
-  };
-
-  const signingOut = () => {
-    signOut(auth);
-    useNavigate("/login");
   };
 
   return (
@@ -85,13 +80,12 @@ export default function Dashboard() {
       <div className="box__todolist">
         {!loading &&
           getTodolists.map((el, index) => (
-            <div style={{ width: "100px", height: "100px" }}>
+            <div key={index} style={{ width: "100px", height: "100px" }}>
               <DeleteIcon />
               <NavLink
                 key={index}
                 to={"/dashboard/todo/" + el.todoListId}
-                className="todolist"
-              >
+                className="todolist">
                 {el.title}
               </NavLink>
             </div>

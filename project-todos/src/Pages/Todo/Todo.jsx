@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../Firebase";
-import { collection, doc, setDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  onSnapshot,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { Input } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
@@ -16,6 +23,8 @@ export default function Todo() {
   const { id } = useParams();
 
   const tasksList = collection(db, "Tasks");
+
+  const taskId = uuid();
 
   const fetchTask = () => {
     onSnapshot(tasksList, (snapshot) => {
@@ -38,20 +47,27 @@ export default function Todo() {
   }, []);
 
   const saveTodoList = () => {
-    setDoc(doc(db, "Tasks", inputTodo), {
+    setDoc(doc(db, "Tasks", taskId), {
       todoListId: id,
       title: inputTodo,
       completed: false,
+      taskId: taskId,
     });
   };
 
   const deleteThing = (item) => {
-    setTodoList(TodoList.filter((el) => el.id !== item.id));
+    const docRef = doc(db, "Tasks", item.taskId);
+    deleteDoc(docRef);
+    setTasks(tasks.filter((el) => el.taskId !== item.taskid));
+    console.log(tasks);
   };
 
   const changeCompletion = (item) => {
-    item.completion ? (item.completion = false) : (item.completion = true);
-    console.log(item);
+    const docRef = doc(db, "Tasks", item.taskId);
+    updateDoc(
+      docRef,
+      item.completed ? { completed: false } : { completed: true }
+    );
   };
 
   return (
@@ -84,20 +100,27 @@ export default function Todo() {
       <ul className="toDoList">
         {/* {!loading && tasks.map((el, index) => <p key={index}>{el.title}</p>)} */}
         {!loading &&
-          tasks.map((todo, index) => (
-            <li key={index}>
-              <Button id="button_delete" onClick={() => deleteThing(todo)}>
-                Delete
-              </Button>
-              <span>{todo.title}</span>
-              <Checkbox
-                sx={{ color: "white" }}
-                id="checkbox_todo"
-                type="checkbox"
-                onClick={() => changeCompletion(todo)}
-              />
-            </li>
-          ))}
+          tasks
+            .filter((el) => el.completed !== filter)
+            .map((todo, index) => (
+              <li key={index}>
+                <Button
+                  sx={{ backgroundColor: "red" }}
+                  id="button_delete"
+                  onClick={() => deleteThing(todo)}>
+                  Delete
+                </Button>
+                <span>{todo.title}</span>
+                {console.log(todo.completed)}
+                <Checkbox
+                  sx={{ color: "black" }}
+                  id="checkbox_todo"
+                  type="checkbox"
+                  checked={todo.completed}
+                  onClick={() => changeCompletion(todo)}
+                />
+              </li>
+            ))}
       </ul>
     </div>
   );
