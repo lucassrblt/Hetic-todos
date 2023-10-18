@@ -29,7 +29,7 @@ export default function Todo() {
   const [addViewer, setAddViewer] = useState("");
   const { id } = useParams();
   const [value, setValue] = React.useState("1");
-
+  const taskId = uuid();
   const handleChangetabs = (event, newValue) => {
     setValue(newValue);
   };
@@ -79,7 +79,9 @@ export default function Todo() {
       const newViewers = [...reachTodo[0].viewer, addViewer];
       const docRef = doc(db, "Todos", id);
       updateDoc(docRef, { viewer: newViewers });
+      setAddViewer("");
     });
+    
   };
 
   const deleteThing = (item) => {
@@ -137,6 +139,16 @@ export default function Todo() {
       />
     </Tabs>
         </div>
+        <TextField
+           label="Collaborateurs"
+           variant="outlined"
+          placeholder="johndoe@gmail.com"
+          onChange={(e) => setAddViewer(e.target.value)}
+          value={addViewer}
+        />
+        <Button variant="contained" onClick={addingViewer}>
+          Ajouter
+        </Button>
       </div>
       <ul className="toDoList">
         {/* {!loading && tasks.map((el, index) => <p key={index}>{el.title}</p>)} */}
@@ -169,14 +181,7 @@ export default function Todo() {
             ))}
       </ul>
       <div>
-        <Input
-          variant="outlined"
-          placeholder="johndoe@gmail.com"
-          onChange={(e) => setAddViewer(e.target.value)}
-        />
-        <Button variant="contained" onClick={addingViewer}>
-          Ajouter
-        </Button>
+      
       </div>
     </div>
   );
