@@ -2,7 +2,13 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  onSnapshot,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../Firebase";
 import { useContext } from "react";
 import { authContext } from "../../Auth";
@@ -20,6 +26,7 @@ export default  function Dashboard() {
 
   const authent = useContext(authContext);
   console.log(authent);
+  console.log(authent.reloadUserInfo.email);
 
   const todolists = collection(db, "Todos");
   const tasks = collection(db, "tasks");
@@ -33,7 +40,9 @@ export default  function Dashboard() {
       snapshot.docs.forEach((doc) => {
         allTodolists.push({ ...doc.data() });
         const todolistsToDisplay = allTodolists.filter(
-          (el) => el.authorId == authent.uid
+          (el) =>
+            el.authorId == authent.uid ||
+            el.viewer.includes(authent.reloadUserInfo.email)
         );
         setGetTodolists(todolistsToDisplay);
         setLoading(false);
@@ -49,15 +58,24 @@ export default  function Dashboard() {
   // Permet  de créer une nouvelle todo list
 
   const create = () => {
-    setDoc(doc(db, "Todos", name), {
-      todoListId: todoListId,
+    setDoc(doc(db, "Todos", id), {
+      id: id,
       authorId: authent.uid,
       title: name,
       completed: false,
-      viewer: {
-        1: viewer,
-      },
+      viewer: [],
     });
+  };
+
+  // Supprimer une todolist
+  const deleteTodo = (todoId) => {
+    const todoToDelete = doc(db, "Todos", todoId);
+    deleteDoc(todoToDelete);
+  };
+
+  const signingOut = () => {
+    signOut(auth);
+    useNavigate("/login");
   };
 
   return (
@@ -84,12 +102,19 @@ export default  function Dashboard() {
       <div className="box__todolist">
         {!loading &&
           getTodolists.map((el, index) => (
-            <div key={index} style={{ width: "100px", height: "100px" }}>
-              <DeleteIcon />
+            <div
+              style={{
+                width: "100px",
+                height: "100px",
+                backgroundColor: "#FAFAFA",
+              }}
+            >
+              <DeleteIcon onClick={() => deleteTodo(el.id)} />
               <NavLink
                 key={index}
-                to={"/dashboard/todo/" + el.todoListId}
-                className="todolist apparition">
+                to={"/dashboard/todo/" + el.id}
+                className="todolist apparition"
+              >
                 {el.title}
               </NavLink>
             </div>

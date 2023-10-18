@@ -7,6 +7,7 @@ import {
   doc,
   setDoc,
   onSnapshot,
+  getDocs,
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -24,7 +25,8 @@ export default function Todo() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inputTodo, setInputTodo] = useState(false);
-  const [filterz, setFilterz] = useState("");
+
+  const [addViewer, setAddViewer] = useState("");
   const { id } = useParams();
   const [value, setValue] = React.useState("1");
 
@@ -33,8 +35,7 @@ export default function Todo() {
   };
 
   const tasksList = collection(db, "Tasks");
-
-  const taskId = uuid();
+  const todoLists = collection(db, "Todos");
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -45,12 +46,8 @@ export default function Todo() {
       let allTasks = [];
       snapshot.docs.forEach((doc) => {
         allTasks.push({ ...doc.data() });
-        // console.log(allTasks[0].todoListId);
-        // console.log(id);
-
         const tasksToDisplay = allTasks.filter((el) => el.todoListId == id);
         setTasks(tasksToDisplay);
-        console.log(tasks);
         setLoading(false);
       });
     });
@@ -69,8 +66,26 @@ export default function Todo() {
     });
   };
 
+  // Ajouter des personnes à une todolist
+  const addingViewer = () => {
+    let allTodolists = [];
+    getDocs(todoLists).then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        // console.log({ ...doc.data() });
+        // console.log(doc.data());
+        allTodolists.push(doc.data());
+      });
+      const reachTodo = allTodolists.filter((el) => el.id == id);
+      const newViewers = [...reachTodo[0].viewer, addViewer];
+      const docRef = doc(db, "Todos", id);
+      updateDoc(docRef, { viewer: newViewers });
+    });
+  };
+
   const deleteThing = (item) => {
     const docRef = doc(db, "Tasks", item.taskId);
+
+    console.log(docRef);
     deleteDoc(docRef);
     setTasks(tasks.filter((el) => el.taskId !== item.taskid));
     console.log(tasks);
@@ -153,6 +168,16 @@ export default function Todo() {
               </li>
             ))}
       </ul>
+      <div>
+        <Input
+          variant="outlined"
+          placeholder="johndoe@gmail.com"
+          onChange={(e) => setAddViewer(e.target.value)}
+        />
+        <Button variant="contained" onClick={addingViewer}>
+          Ajouter
+        </Button>
+      </div>
     </div>
   );
 }
