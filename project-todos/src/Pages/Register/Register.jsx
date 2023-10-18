@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Firebase";
-import "./register.css";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
+import '../Login/Login.css'
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -33,26 +33,32 @@ export default function Register() {
   };
 
   return (
-    <div id="register">
-      <div className="login">
+    <div id="register" className="login">
+      
         <h1>Register</h1>
-        <Input
-          sx={{ width: "100%" }}
-          type="text"
-          onInput={handleEmail}
-          value={email}
-        />
-        <Input
-          sx={{ width: "100%" }}
-          type="text"
-          onInput={handlePass}
-          value={pass}
-        />
+        <TextField
+        sx={{ width: "100%",maxWidth:"500px" }}
+        type="email"
+        name="email"
+        label="Email"
+        variant="outlined"
+        onChange={handleEmail}
+        value={email}
+      />
+      <TextField
+        sx={{ width: "100%",maxWidth:"500px" }}
+        type="email"
+        label="Mots de passe"
+        name="email"
+        variant="outlined"
+        onChange={handlePass}
+        value={pass}
+      />
         <Button variant="contained" type="submit" onClick={register}>
           SignIn
         </Button>
         <NavLink to="/login">Déja un compte ?</NavLink>
-      </div>
+    
     </div>
   );
 }
