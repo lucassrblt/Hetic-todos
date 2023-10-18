@@ -6,7 +6,7 @@ import "../../src/index.css";
 import Auth from "../Auth";
 import Login from "../Pages/Login/Login";
 import { Dashboard } from "../Pages/Dashboard/Dashboard";
-import { Todo } from "../Pages/Todo/Todo";
+import Todo from "../Pages/Todo/Todo";
 import PrivateRoute from "../Pages/PrivateRoute/PrivateRoute";
 
 function App() {
