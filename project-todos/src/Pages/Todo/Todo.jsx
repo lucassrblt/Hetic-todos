@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../Firebase";
-import { collection, doc, setDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  onSnapshot,
+  updateDoc,
+  getDocs,
+} from "firebase/firestore";
 import { Input } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
@@ -12,10 +19,14 @@ export default function Todo() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inputTodo, setInputTodo] = useState(false);
-  const [filter, setFilter] = useState();
-  const { id } = useParams();
+  const [filter, setFilter] = useState("");
+  const [addViewer, setAddViewer] = useState("");
+  const [currentTodo, setCurrentTodo] = useState("");
 
+  const { id } = useParams();
+  const taskId = uuid();
   const tasksList = collection(db, "Tasks");
+  const todoLists = collection(db, "Todos");
 
   const fetchTask = () => {
     onSnapshot(tasksList, (snapshot) => {
@@ -27,7 +38,6 @@ export default function Todo() {
 
         const tasksToDisplay = allTasks.filter((el) => el.todoListId == id);
         setTasks(tasksToDisplay);
-        console.log(tasks);
         setLoading(false);
       });
     });
@@ -38,15 +48,28 @@ export default function Todo() {
   }, []);
 
   const saveTodoList = () => {
-    setDoc(doc(db, "Tasks", inputTodo), {
+    setDoc(doc(db, "Tasks", taskId), {
+      id: taskId,
       todoListId: id,
       title: inputTodo,
       completed: false,
     });
   };
 
-  const deleteThing = (item) => {
-    setTodoList(TodoList.filter((el) => el.id !== item.id));
+  // Ajouter des personnes à une todolist
+  const addingViewer = () => {
+    let allTodolists = [];
+    getDocs(todoLists).then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        // console.log({ ...doc.data() });
+        // console.log(doc.data());
+        allTodolists.push(doc.data());
+      });
+      const reachTodo = allTodolists.filter((el) => el.id == id);
+      const newViewers = [...reachTodo[0].viewer, addViewer];
+      const docRef = doc(db, "Todos", id);
+      updateDoc(docRef, { viewer: newViewers });
+    });
   };
 
   const changeCompletion = (item) => {
@@ -99,6 +122,16 @@ export default function Todo() {
             </li>
           ))}
       </ul>
+      <div>
+        <Input
+          variant="outlined"
+          placeholder="johndoe@gmail.com"
+          onChange={(e) => setAddViewer(e.target.value)}
+        />
+        <Button variant="contained" onClick={addingViewer}>
+          Ajouter
+        </Button>
+      </div>
     </div>
   );
 }
