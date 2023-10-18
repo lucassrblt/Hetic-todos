@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { NavLink } from "react-router-dom";
 import '../Login/login.css'
-import { collection, addDoc } from "firebase/firestore";
+import { collection, setDoc, doc } from "firebase/firestore";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -20,11 +20,17 @@ export default function Register() {
     setPass(e.target.value);
   };
 
-  const register = async (e) => {
+  const register = (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         const user = userCredential.user;
+        console.log(user);
+        // Ajoute le user dans une collection firestore
+        setDoc(doc(db, "User", email), {
+          id: user.uid,
+          email: email,
+        });
         console.log(user);
       })
       .catch((error) => {
@@ -32,17 +38,6 @@ export default function Register() {
         
         const errorMessage = error.message;
       });
-
-    // Ajoute le user dans une collection firestore
-    // try {
-    //   const docRef = await addDoc(collection(db, "users", title), {
-    //     email: email,
-    //     pass: pass,
-    //   });
-    //   console.log("Document written with ID: ", docRef.id);
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    // }
   };
 
   return (

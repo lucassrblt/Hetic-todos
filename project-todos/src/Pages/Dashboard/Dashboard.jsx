@@ -1,45 +1,67 @@
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../Firebase";
-import { getDocs } from "firebase/firestore";
 import { useContext } from "react";
 import { authContext } from "../../Auth";
 import uuid from "react-uuid";
 import "./Dashboard.css";
 
+export function Dashboard() {
+  const [addATodoList, setaddATodoList] = useState(false);
+  const [name, setName] = useState("");
+  const [viewer, setViewer] = useState("");
+  const [getTodolists, setGetTodolists] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const authent = useContext(authContext);
+  console.log(authent);
 
-export default function Dashboard() {
-  const [title, setTitle] = useState("");
-  const [email, setEmail] = useState("");
+  const id = uuid();
+  const todolists = collection(db, "Todos");
+  const tasks = collection(db, "tasks");
+  const authents = useContext(authContext);
 
-  const handlechange = (e) => {
-    setTitle(e.target.value);
+  // Créez une fonction pour récupérer les données de la collection "todos"
+  const fetchTodoList = () => {
+    onSnapshot(todolists, (snapshot) => {
+      let allTodolists = [];
+      snapshot.docs.forEach((doc) => {
+        allTodolists.push({ ...doc.data() });
+        const todolistsToDisplay = allTodolists.filter(
+          (el) => el.authorId == authent.uid
+        );
+        setGetTodolists(todolistsToDisplay);
+        setLoading(false);
+        console.log(getTodolists);
+      });
+    });
   };
 
-  const savedb= async ()=>{
-    try{
-    const docRef = setDoc(doc(db, "Todos", "victan"), {
-       title: title,
-       completed: false,
-      mail : email,
-       ID: new Date(),
-      
-    });
-    await docRef;
-    console.log("Document Ajouter: ", docRef.id);}
-    catch(e){
-      console.error("erreur lors de l'ajout: ", e);
-    }
+  useEffect(() => {
+    fetchTodoList();
+  }, []);
 
-  }
-  const mailchange = (e) => {
-    console.log(e.target.value);
-    setEmail(e.target.value);
-  }
+  // Permet  de créer une nouvelle todo list
+
+  const create = () => {
+    setDoc(doc(db, "Todos", name), {
+      todoListId: uuid(),
+      authorId: authent.uid,
+      title: name,
+      completed: false,
+      viewer: {
+        1: viewer,
+      },
+    });
+  };
+
+  const signingOut = () => {
+    signOut(auth);
+    useNavigate("/login");
+  };
 
   return (
     <div>
@@ -61,10 +83,10 @@ export default function Dashboard() {
       )}
       <div className="box__todolist">
         {!loading &&
-          todolists.map((el, index) => (
+          getTodolists.map((el, index) => (
             <NavLink
               key={index}
-              to={"/dashboard/todo/" + el.ID}
+              to={"/dashboard/todo/" + el.todoListId}
               className="todolist"
             >
               {el.title}
