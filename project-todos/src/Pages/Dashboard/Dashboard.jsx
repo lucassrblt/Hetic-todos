@@ -8,8 +8,9 @@ import { useContext } from "react";
 import { authContext } from "../../Auth";
 import uuid from "react-uuid";
 import "./Dashboard.css";
-
-export function Dashboard() {
+import { TextField } from "@mui/material";
+import { Button } from "@mui/material";
+export default function Dashboard() {
   const [addATodoList, setaddATodoList] = useState(false);
   const [name, setName] = useState("");
   const [viewer, setViewer] = useState("");
@@ -66,21 +67,24 @@ export function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-
-      <button onClick={() => setaddATodoList(!addATodoList)}>+</button>
+      
+      <div className="Ajout_box"><div className="Button_input_ajout">
+      <Button sx={ {padding: '1.1em',maxHeight:'50px' }} variant="contained" onClick={() => setaddATodoList(!addATodoList)} className="Ajouter">Ajouter une tache +</Button>
       {addATodoList && (
-        <div>
-          <label htmlFor="">Name</label>
-          <input type="text" onChange={(e) => setName(e.target.value)} />
-          <label htmlFor="">Ajouter des colaborateurs</label>
-          <input
+        <div className="input_todolist apparition">
+        
+          <TextField type="text" onChange={(e) => setName(e.target.value)} placeholder="Titre" label="Titre" />
+        
+          <TextField
+          label="Collaborateur"
             type="mail"
             placeholder="admin@admin.com"
             onChange={(e) => setViewer(e.target.value)}
           />
-          <button onClick={create}>Créer</button>
+          <Button sx={ {padding: '1.1em' }} variant="contained"  onClick={create}>Créer</Button>
         </div>
-      )}
+
+      )}</div>
       <div className="box__todolist">
         {!loading &&
           getTodolists.map((el, index) => (
@@ -93,14 +97,7 @@ export function Dashboard() {
             </NavLink>
           ))}
       </div>
-      <p>Dashboard</p>
-      <input type="text" name="title" onChange={handlechange} value={title}/>
-      <input type="text" name="email" onChange={mailchange} />
-      <button onClick={savedb}>Sauvegarder</button>
-      <button
-        style={{ width: "40px", height: "40px" }}
-        onClick={signingOut}
-      ></button>
+      </div>
     </div>
   );
 }

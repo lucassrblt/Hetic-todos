@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../Firebase";
 import Input from "@mui/material/Input";
@@ -7,6 +7,10 @@ import TextField from "@mui/material/TextField";
 import { NavLink } from "react-router-dom";
 import '../Login/login.css'
 import { collection, setDoc, doc } from "firebase/firestore";
+import { authContext } from "../../Auth";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -15,11 +19,11 @@ export default function Register() {
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
-
+ 
   const handlePass = (e) => {
     setPass(e.target.value);
   };
-
+  const user=useContext(authContext)
   const register = (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, pass)
@@ -39,9 +43,12 @@ export default function Register() {
         const errorMessage = error.message;
       });
   };
-
+  const navigate=useNavigate()
+  useEffect(()=>{
+    user? navigate('/dashboard'):null 
+  },[])
   return (
-    <div id="register" className="login">
+   !user? <div id="register" className="login">
       
         <h1>Inscription</h1>
         <TextField
@@ -67,6 +74,6 @@ export default function Register() {
         </Button>
         <NavLink to="/login">Déja un compte ?</NavLink>
     
-    </div>
+    </div>: <></> 
   );
 }

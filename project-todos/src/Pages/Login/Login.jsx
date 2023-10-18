@@ -5,7 +5,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import "./login.css";
 import { NavLink } from "react-router-dom";
-
+import { authContext } from "../../Auth";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -17,7 +19,8 @@ export default function Login() {
   const handlePass = (e) => {
     setPass(e.target.value);
   };
-
+  const navigate = useNavigate();
+  const user  = useContext(authContext); 
   const connect = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, pass)
@@ -29,8 +32,11 @@ export default function Login() {
         const errorMessage = error.message;
       });
   };
-
+  useEffect(()=>{
+    user? navigate('/dashboard'):null 
+  },[])
   return (
+    !user?
     <div className="login">
       <h1>Connexion</h1>
       <TextField
@@ -58,6 +64,8 @@ export default function Login() {
 
    
       <NavLink to="/">Pas de compte ?</NavLink>
-    </div>
+    </div>:<>
+    {navigate("/dashboard")}
+    </>
   );
 }
