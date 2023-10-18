@@ -19,8 +19,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/todo/:id" element={<Todo />} />
           </Route>
-          <Route path="/dashboard/todo/:id" element={<Todo />} />
         </Routes>
       </Auth>
     </BrowserRouter>

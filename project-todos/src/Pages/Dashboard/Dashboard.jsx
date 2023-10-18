@@ -16,6 +16,8 @@ export function Dashboard() {
   const [todolists, setTodolists] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const id = uuid();
+
   const authents = useContext(authContext);
 
   // Créez une fonction pour récupérer les données de la collection "todos"
@@ -29,7 +31,6 @@ export function Dashboard() {
         // Récupérez les données de chaque document
         todos.push(doc.data());
       });
-      console.log(todos);
       setTodolists(todos);
       setLoading(false);
     } catch (error) {
@@ -46,8 +47,8 @@ export function Dashboard() {
   // Permet  de créer une nouvelle todo list
   const create = async () => {
     try {
-      const docRef = setDoc(doc(db, "Todos", name), {
-        ID: uuid(),
+      const docRef = setDoc(doc(db, "Todos", id), {
+        ID: id,
         title: name,
         completed: false,
         viewer: viewer,
@@ -85,8 +86,8 @@ export function Dashboard() {
       )}
       {!loading &&
         todolists.map((el, index) => (
-          <li component={Link} to={"/dashboard/todo/" + el.ID}>
-            {el.title}
+          <li>
+            <Link to={"/dashboard/todo/" + el.ID}>{el.title}</Link>
           </li>
         ))}
     </div>
