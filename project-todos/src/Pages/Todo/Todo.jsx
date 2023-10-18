@@ -11,7 +11,12 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { AccordionDetails, AccordionSummary, Input, Typography } from "@mui/material";
+import {
+  AccordionDetails,
+  AccordionSummary,
+  Input,
+  Typography,
+} from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";
@@ -81,7 +86,6 @@ export default function Todo() {
       updateDoc(docRef, { viewer: newViewers });
       setAddViewer("");
     });
-    
   };
 
   const deleteThing = (item) => {
@@ -89,7 +93,7 @@ export default function Todo() {
 
     console.log(docRef);
     deleteDoc(docRef);
-    setTasks(tasks.filter((el) => el.taskId !== item.taskid));
+    setTasks(tasks.filter((el) => el.taskId !== item.taskId));
     console.log(tasks);
   };
 
@@ -105,43 +109,48 @@ export default function Todo() {
     <div>
       <div className="todopage">
         <div className="add_task">
-        <TextField
-          sx={{ color: "black" }}
-          label="Task"
-          variant="outlined"
-          type="text"
-          onInput={(e) => {
-            setInputTodo(e.target.value);
-          }}
-        />
-        <Button onClick={saveTodoList }variant='contained'>save</Button></div>
+          <TextField
+            sx={{ color: "black" }}
+            label="Task"
+            variant="outlined"
+            type="text"
+            onInput={(e) => {
+              setInputTodo(e.target.value);
+            }}
+          />
+          <Button onClick={saveTodoList} variant="contained">
+            save
+          </Button>
+        </div>
         <div id="button_filter">
-        <Tabs  value={value}
-        onChange={handleChangetabs}
-        aria-label="wrapped label tabs example">
-      <Tab
-        label="ALL"
-        value="1"
-        active={filter === null}
-        onClick={() => setFilter(null)}
-      />
-      <Tab
-        label="done"
-        value="2"
-        active={filter === false}
-        onClick={() => setFilter(false)}
-      />
-      <Tab
-      value="3"
-        label="not done yet"
-        active={filter === true}
-        onClick={() => setFilter(true)}
-      />
-    </Tabs>
+          <Tabs
+            value={value}
+            onChange={handleChangetabs}
+            aria-label="wrapped label tabs example"
+          >
+            <Tab
+              label="ALL"
+              value="1"
+              active={filter === null}
+              onClick={() => setFilter(null)}
+            />
+            <Tab
+              label="done"
+              value="2"
+              active={filter === false}
+              onClick={() => setFilter(false)}
+            />
+            <Tab
+              value="3"
+              label="not done yet"
+              active={filter === true}
+              onClick={() => setFilter(true)}
+            />
+          </Tabs>
         </div>
         <TextField
-           label="Collaborateurs"
-           variant="outlined"
+          label="Collaborateurs"
+          variant="outlined"
           placeholder="johndoe@gmail.com"
           onChange={(e) => setAddViewer(e.target.value)}
           value={addViewer}
@@ -157,32 +166,41 @@ export default function Todo() {
             .filter((el) => el.completed !== filter)
             .map((todo, index) => (
               <li key={index}>
-              
-                <Accordion  expanded={expanded === index} onChange={handleChange(index)} sx={{ width:'80%'}} TransitionProps={{ unmountOnExit: true }} className="apparition"><AccordionSummary><Typography  sx={{ width: '33%', flexShrink: 0 }}>{todo.title}</Typography>  <Checkbox
-                  sx={{ color: "black" }}
-                  id="checkbox_todo"
-                  type="checkbox"
-                  checked={todo.completed}
-                  onClick={() => changeCompletion(todo)}
-                /></AccordionSummary>
-                <AccordionDetails>
-                <Button
-                  sx={{ backgroundColor: "red" }}
-                  id="button_delete"
-                  variant="contained"
-                  onClick={() => deleteThing(todo)}>
-                  Delete
-                </Button>
-                </AccordionDetails>
+                <Accordion
+                  expanded={expanded === index}
+                  onChange={handleChange(index)}
+                  sx={{ width: "80%" }}
+                  TransitionProps={{ unmountOnExit: true }}
+                  className="apparition"
+                >
+                  <AccordionSummary>
+                    <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                      {todo.title}
+                    </Typography>{" "}
+                    <Checkbox
+                      sx={{ color: "black" }}
+                      id="checkbox_todo"
+                      type="checkbox"
+                      checked={todo.completed}
+                      onClick={() => changeCompletion(todo)}
+                    />
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Button
+                      sx={{ backgroundColor: "red" }}
+                      id="button_delete"
+                      variant="contained"
+                      onClick={() => deleteThing(todo)}
+                    >
+                      Delete
+                    </Button>
+                  </AccordionDetails>
                 </Accordion>
                 {console.log(todo.completed)}
-              
               </li>
             ))}
       </ul>
-      <div>
-      
-      </div>
+      <div></div>
     </div>
   );
 }
