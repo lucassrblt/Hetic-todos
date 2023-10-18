@@ -17,6 +17,10 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase";
 import { useContext,useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Logo from '../../assets/logo.svg'
+import Dashboard from "../../Pages/Dashboard/Dashboard";
+import uuid from "react-uuid";
+import FaceIcon from '@mui/icons-material/Face';
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
   { title: "Profile", link: "/profile" },
@@ -31,6 +35,9 @@ export default function Nav() {
   };
   const  user  = useContext(authContext);
   const navigate = useNavigate();
+  const goto=(endroit)=>{
+    navigate(endroit)
+  }
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -38,7 +45,7 @@ export default function Nav() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
+  const taskId = uuid();
   useEffect(() => {
     if (titlenav === "Logout") {
       signOut(auth);
@@ -57,8 +64,8 @@ export default function Nav() {
    user? <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
+          <img src={Logo} className="logo" alt="" srcset="" />
+          {/* <Typography
             variant="h6"
             noWrap
             component="a"
@@ -72,10 +79,10 @@ export default function Nav() {
               color: "inherit",
               textDecoration: "none",
             }}>
-            LOGO
-          </Typography>
+            To do list
+          </Typography> */}
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -108,8 +115,8 @@ export default function Nav() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          </Box> */}
+          
           <Typography
             variant="h5"
             noWrap
@@ -129,19 +136,28 @@ export default function Nav() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            
               <Button
-                key={page}
-                sx={{ my: 2, color: "white", display: "block" }}>
-                {page}
+                
+                sx={{ my: 2, color: "white", display: "block" }} onClick={()=>{goto('./dashboard')}}>
+                Dashboard
               </Button>
-            ))}
+            
+         
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="#" />
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: "primary.main",
+                    color: "primary.contrastText",
+                  }}>
+                  <FaceIcon />
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu

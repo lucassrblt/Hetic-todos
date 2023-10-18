@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import "./login.css";
 import { NavLink } from "react-router-dom";
 import { authContext } from "../../Auth";
-import { useContext } from "react";
+import { useContext,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");

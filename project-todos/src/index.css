@@ -1,7 +1,7 @@
 body {
   margin: 0px;
   padding: 0px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 h1 {
@@ -12,3 +12,73 @@ h1 {
   color: #333;
 }
 
+li {
+  list-style-type: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo{
+  width: 2em;
+  margin: 1em;
+}
+.todopage{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+
+  margin-top: 2em;
+}
+.add_task{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-top: 2em;
+}
+
+.MuiAccordionSummary-content{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.css-hip9hq-MuiPaper-root-MuiAppBar-root {
+  background: rgb(36, 36, 36) !important;
+  width: 100vw !important;
+}
+.css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root{
+  width: 100%;
+}
+.css-1ev91rk-MuiPaper-root-MuiAccordion-root.Mui-expanded:last-of-type,.MuiPaper-root {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #333;
+}
+.css-sghohy-MuiButtonBase-root-MuiButton-root{
+  background-color: #333 !important;
+}
+.css-1aquho2-MuiTabs-indicator{
+  background-color: #333 !important;
+}
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected{
+  color: #333 !important;
+}
+ul{
+  width: 100%;
+  margin-top: 2em;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root{
+  background-color: #e2e2e2 o !important;
+}

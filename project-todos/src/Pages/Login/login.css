@@ -3,9 +3,12 @@
   top: 50%;
   gap: 1rem;
   left: 50%;
-  width: 100%;
+  width: 80%;
+  padding-left: 2em;
+  padding-right: 2em;
   transform: translate(-50%, -50%);
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   justify-content: center;
   align-items: center;

@@ -9,8 +9,9 @@ import { authContext } from "../../Auth";
 import uuid from "react-uuid";
 import "./Dashboard.css";
 import { TextField } from "@mui/material";
-import { Button } from "@mui/material";
-export default function Dashboard() {
+import { Button } from "@mui/material";import DeleteIcon from "@mui/icons-material/Delete";
+
+export default  function Dashboard() {
   const [addATodoList, setaddATodoList] = useState(false);
   const [name, setName] = useState("");
   const [viewer, setViewer] = useState("");
@@ -20,10 +21,10 @@ export default function Dashboard() {
   const authent = useContext(authContext);
   console.log(authent);
 
-  const id = uuid();
   const todolists = collection(db, "Todos");
   const tasks = collection(db, "tasks");
   const authents = useContext(authContext);
+  const todoListId = uuid();
 
   // Créez une fonction pour récupérer les données de la collection "todos"
   const fetchTodoList = () => {
@@ -49,7 +50,7 @@ export default function Dashboard() {
 
   const create = () => {
     setDoc(doc(db, "Todos", name), {
-      todoListId: uuid(),
+      todoListId: todoListId,
       authorId: authent.uid,
       title: name,
       completed: false,
@@ -59,28 +60,23 @@ export default function Dashboard() {
     });
   };
 
-  const signingOut = () => {
-    signOut(auth);
-    useNavigate("/login");
-  };
-
   return (
-    <div>
+    <div className="Dashboard">
       <h1>Dashboard</h1>
       
       <div className="Ajout_box"><div className="Button_input_ajout">
-      <Button sx={ {padding: '1.1em',maxHeight:'50px' }} variant="contained" onClick={() => setaddATodoList(!addATodoList)} className="Ajouter">Ajouter une tache +</Button>
+      <Button sx={ {padding: '1.1em',maxHeight:'50px' }} variant="contained" onClick={() => setaddATodoList(!addATodoList)} className="Ajouter">Ajouter une To do list +</Button>
       {addATodoList && (
         <div className="input_todolist apparition">
         
           <TextField type="text" onChange={(e) => setName(e.target.value)} placeholder="Titre" label="Titre" />
-        
+{/*         
           <TextField
           label="Collaborateur"
             type="mail"
             placeholder="admin@admin.com"
             onChange={(e) => setViewer(e.target.value)}
-          />
+          /> */}
           <Button sx={ {padding: '1.1em' }} variant="contained"  onClick={create}>Créer</Button>
         </div>
 
@@ -88,13 +84,15 @@ export default function Dashboard() {
       <div className="box__todolist">
         {!loading &&
           getTodolists.map((el, index) => (
-            <NavLink
-              key={index}
-              to={"/dashboard/todo/" + el.todoListId}
-              className="todolist"
-            >
-              {el.title}
-            </NavLink>
+            <div key={index} style={{ width: "100px", height: "100px" }}>
+              <DeleteIcon />
+              <NavLink
+                key={index}
+                to={"/dashboard/todo/" + el.todoListId}
+                className="todolist apparition">
+                {el.title}
+              </NavLink>
+            </div>
           ))}
       </div>
       </div>
